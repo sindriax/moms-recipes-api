@@ -25,7 +25,11 @@ func GetCollection(name string) *mongo.Collection {
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("mongo.Connect error: %v", err)
+	}
+
+	if err := client.Ping(ctx, nil); err != nil {
+		log.Fatalf("mongo Ping error: %v", err)
 	}
 
 	return client.Database(dbName).Collection(name)
