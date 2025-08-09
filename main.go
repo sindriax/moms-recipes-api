@@ -8,6 +8,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
+
+	"github.com/sindriax/moms-recipes-api/internal/db"
+	"github.com/sindriax/moms-recipes-api/internal/recipes"
 )
 
 func main() {
@@ -22,13 +25,13 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("ok"))
-	})
+	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("ok")) })
 
-	log.Printf("Server running on http://localhost:%s\n", port)
-	err := http.ListenAndServe(":"+port, r)
-	if err != nil {
-		log.Fatal(err)
-	}
+	col := db.GetCollection("recipes")
+	h := &recipes.Handler{Col: col}
+	r.Get("/recipes", h.List)
+	r.Post("/recipes", h.Create)
+
+	log.Println("Server running on http://localhost:" + port)
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
