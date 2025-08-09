@@ -1,0 +1,22 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go workspace file
+go.work
+
+# Environment variables
+.env
+
+# Dependency directories (not always needed, but can help)
+vendor/
+
+# IDE/editor settings
+.vscode/
+.idea/
+.DS_Store
